@@ -1,58 +1,29 @@
-// Function to return a promise that resolves with an array after 3 seconds
-function generateArray() {
-    return new Promise((resolve) => {
-        setTimeout(() => {
-            resolve([1, 2, 3, 4]);
-        }, 3000);
+describe('Testing Async Operations with Promises', () => {
+  it('should manipulate array as per requirements', () => {
+    const baseUrl = "http://localhost:3000";  // Adjust the base URL as per your setup
+
+    cy.visit(baseUrl + "/main.html");
+
+    // First promise: Resolve with an array after 3 seconds
+    cy.wait(3000).then(() => {
+      // Simulated input array
+      const inputArray = [1, 2, 3, 4];
+
+      // Display initial array
+      cy.get("#output").should("contain", inputArray.join(','));
+
+      // Second promise: Filter out odd numbers after 1 second
+      const filteredArray = inputArray.filter(num => num % 2 === 0);
+      cy.wait(1000).then(() => {
+        cy.get("#output").should("contain", filteredArray.join(','));
+      });
+
+      // Third promise: Multiply even numbers by 2 after 2 seconds
+      const transformedArray = inputArray.map(num => (num % 2 === 0) ? num * 2 : num);
+      cy.wait(2000).then(() => {
+        cy.get("#output").should("contain", transformedArray.join(','));
+      });
     });
-}
-
-// Function to filter out odd numbers from the array
-function filterOddNumbers(arr) {
-    return arr.filter(num => num % 2 === 0);
-}
-
-// Function to multiply even numbers by 2 in the array
-function multiplyEvenNumbers(arr) {
-    return arr.map(num => num % 2 === 0 ? num * 2 : num);
-}
-
-// Function to update the HTML output
-function updateOutput(text) {
-    const outputDiv = document.getElementById('output');
-    outputDiv.textContent = text;
-}
-
-// Main function to chain promises
-function processArray() {
-    generateArray()
-        .then(array => {
-            // Print initial array
-            updateOutput(`Array after 3 seconds: [${array.join(', ')}]`);
-            return array;
-        })
-        .then(filterOddNumbers)
-        .then(filteredArray => {
-            // Print filtered array after 1 second
-            setTimeout(() => {
-                updateOutput(`Filtered Array: [${filteredArray.join(', ')}]`);
-            }, 1000);
-            return filteredArray;
-        })
-        .then(multiplyEvenNumbers)
-        .then(finalArray => {
-            // Print final array after 2 seconds
-            setTimeout(() => {
-                updateOutput(`Final Array: [${finalArray.join(', ')}]`);
-            }, 2000);
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            updateOutput('An error occurred. Please try again.');
-        });
-}
-
-// Call the main function on page load
-document.addEventListener('DOMContentLoaded', function() {
-    processArray();
+  });
 });
+
