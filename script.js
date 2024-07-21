@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
   const outputElement = document.getElementById('output');
-  
+
   // Function that returns a promise after 3 seconds with an array of numbers
   function getData() {
     return new Promise(resolve => {
@@ -10,25 +10,33 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // Function to filter out odd numbers and multiply even numbers by 2
+  function processNumbers(numbers) {
+    const evenNumbers = numbers.filter(num => num % 2 === 0);
+    const multipliedNumbers = evenNumbers.map(num => num * 2);
+    return multipliedNumbers;
+  }
+
+  // Initial loading message
+  outputElement.textContent = 'Loading...';
+
   // Chain promises to manipulate the array
   getData()
     .then(numbers => {
-      // Filter out odd numbers after 1 second
+      // Simulate async filtering after 1 second
       return new Promise(resolve => {
         setTimeout(() => {
-          const evenNumbers = numbers.filter(num => num % 2 === 0);
-          outputElement.textContent = evenNumbers.join(', ');
-          resolve(evenNumbers);
+          const result = processNumbers(numbers);
+          resolve(result);
         }, 1000);
       });
     })
-    .then(evenNumbers => {
-      // Multiply even numbers by 2 after another 2 seconds
+    .then(result => {
+      // Simulate async updating after 2 seconds
       return new Promise(resolve => {
         setTimeout(() => {
-          const multipliedNumbers = evenNumbers.map(num => num * 2);
-          outputElement.textContent = multipliedNumbers.join(', ');
-          resolve(multipliedNumbers);
+          outputElement.textContent = result.join(', ');
+          resolve();
         }, 2000);
       });
     })
@@ -37,3 +45,4 @@ document.addEventListener('DOMContentLoaded', () => {
       outputElement.textContent = 'Error occurred. Please try again.';
     });
 });
+
