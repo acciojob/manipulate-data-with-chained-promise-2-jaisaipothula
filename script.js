@@ -1,29 +1,39 @@
-describe('Testing Async Operations with Promises', () => {
-  it('should manipulate array as per requirements', () => {
-    const baseUrl = "http://localhost:3000";  // Adjust the base URL as per your setup
-
-    cy.visit(baseUrl + "/main.html");
-
-    // First promise: Resolve with an array after 3 seconds
-    cy.wait(3000).then(() => {
-      // Simulated input array
-      const inputArray = [1, 2, 3, 4];
-
-      // Display initial array
-      cy.get("#output").should("contain", inputArray.join(','));
-
-      // Second promise: Filter out odd numbers after 1 second
-      const filteredArray = inputArray.filter(num => num % 2 === 0);
-      cy.wait(1000).then(() => {
-        cy.get("#output").should("contain", filteredArray.join(','));
-      });
-
-      // Third promise: Multiply even numbers by 2 after 2 seconds
-      const transformedArray = inputArray.map(num => (num % 2 === 0) ? num * 2 : num);
-      cy.wait(2000).then(() => {
-        cy.get("#output").should("contain", transformedArray.join(','));
-      });
+document.addEventListener('DOMContentLoaded', () => {
+  const outputElement = document.getElementById('output');
+  
+  // Function that returns a promise after 3 seconds with an array of numbers
+  function getData() {
+    return new Promise(resolve => {
+      setTimeout(() => {
+        resolve([1, 2, 3, 4]);
+      }, 3000);
     });
-  });
-});
+  }
 
+  // Chain promises to manipulate the array
+  getData()
+    .then(numbers => {
+      // Filter out odd numbers after 1 second
+      return new Promise(resolve => {
+        setTimeout(() => {
+          const evenNumbers = numbers.filter(num => num % 2 === 0);
+          outputElement.textContent = evenNumbers.join(', ');
+          resolve(evenNumbers);
+        }, 1000);
+      });
+    })
+    .then(evenNumbers => {
+      // Multiply even numbers by 2 after another 2 seconds
+      return new Promise(resolve => {
+        setTimeout(() => {
+          const multipliedNumbers = evenNumbers.map(num => num * 2);
+          outputElement.textContent = multipliedNumbers.join(', ');
+          resolve(multipliedNumbers);
+        }, 2000);
+      });
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      outputElement.textContent = 'Error occurred. Please try again.';
+    });
+});
