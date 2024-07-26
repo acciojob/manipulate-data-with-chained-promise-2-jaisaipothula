@@ -1,48 +1,48 @@
-document.addEventListener('DOMContentLoaded', () => {
-  const outputElement = document.getElementById('output');
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Promise Chaining Example</title>
+</head>
+<body>
+    <div id="output">Loading...</div>
 
-  // Function that returns a promise after 3 seconds with an array of numbers
-  function getData() {
-    return new Promise(resolve => {
-      setTimeout(() => {
-        resolve([1, 2, 3, 4]);
-      }, 3000);
-    });
-  }
+    <script>
+        function processArray() {
+            // Create a promise that resolves with an array of numbers after 3 seconds
+            return new Promise((resolve) => {
+                setTimeout(() => {
+                    resolve([1, 2, 3, 4]);
+                }, 3000);
+            });
+        }
 
-  // Function to filter out odd numbers and multiply even numbers by 2
-  function processNumbers(numbers) {
-    const evenNumbers = numbers.filter(num => num % 2 === 0);
-    const multipliedNumbers = evenNumbers.map(num => num * 2);
-    return multipliedNumbers;
-  }
+        function filterEvens(arr) {
+            // Filter out odd numbers
+            return arr.filter(num => num % 2 === 0);
+        }
 
-  // Initial loading message
-  outputElement.textContent = 'Loading...';
+        function multiplyByTwo(arr) {
+            // Multiply even numbers by 2
+            return arr.map(num => num * 2);
+        }
 
-  // Chain promises to manipulate the array
-  getData()
-    .then(numbers => {
-      // Simulate async filtering after 1 second
-      return new Promise(resolve => {
-        setTimeout(() => {
-          const result = processNumbers(numbers);
-          resolve(result);
-        }, 1000);
-      });
-    })
-    .then(result => {
-      // Simulate async updating after 2 seconds
-      return new Promise(resolve => {
-        setTimeout(() => {
-          outputElement.textContent = result.join(', ');
-          resolve();
-        }, 2000);
-      });
-    })
-    .catch(error => {
-      console.error('Error:', error);
-      outputElement.textContent = 'Error occurred. Please try again.';
-    });
-});
+        // Start processing the array
+        processArray()
+            .then((arr) => {
+                // After 1 second, update the output with the filtered even numbers
+                setTimeout(() => {
+                    const evens = filterEvens(arr);
+                    document.getElementById('output').textContent = evens.join(', ');
+                }, 1000);
 
+                // After another 2 seconds, update the output with the doubled even numbers
+                setTimeout(() => {
+                    const doubledEvens = multiplyByTwo(filterEvens(arr));
+                    document.getElementById('output').textContent = doubledEvens.join(', ');
+                }, 3000); // 1 second for the first set + 2 more seconds
+            });
+    </script>
+</body>
+</html>
