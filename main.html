@@ -3,52 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Promise Chaining Example</title>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            function processData() {
-                return new Promise((resolve) => {
-                    // Simulate data processing with a 3-second delay
-                    setTimeout(() => {
-                        resolve([1, 2, 3, 4]);
-                    }, 3000);
-                });
-            }
-
-            function filterOddNumbers(arr) {
-                return new Promise((resolve) => {
-                    setTimeout(() => {
-                        const evenNumbers = arr.filter(num => num % 2 === 0);
-                        resolve(evenNumbers);
-                    }, 1000);
-                });
-            }
-
-            function multiplyEvenNumbers(arr) {
-                return new Promise((resolve) => {
-                    setTimeout(() => {
-                        const multipliedNumbers = arr.map(num => num * 2);
-                        resolve(multipliedNumbers);
-                    }, 2000);
-                });
-            }
-
-            function updateOutput(content) {
-                document.getElementById('output').textContent = content.join(', ');
-            }
-
-            processData()
-                .then((data) => filterOddNumbers(data))
-                .then((filteredData) => {
-                    updateOutput(filteredData);
-                    return multiplyEvenNumbers(filteredData);
-                })
-                .then((finalData) => updateOutput(finalData))
-                .catch((error) => console.error('Error:', error));
-        });
-    </script>
+    <title>Promise Example</title>
 </head>
 <body>
-    <div id="output">Loading...</div>
+    <div id="output"></div>
+    <script src="script.js"></script> <!-- Make sure your script is linked -->
 </body>
 </html>
